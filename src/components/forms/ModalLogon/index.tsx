@@ -42,7 +42,7 @@ export function ModalLogon({ visible = false, onChangeVisibility }: ModalLogonPr
                 onChangeVisibility();
             }
         } catch (error: any) {
-            toast.error(error.response.data)
+            toast.error(error?.response?.data)
         } finally {
             setIsLoading(false);
         }
