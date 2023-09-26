@@ -1,16 +1,27 @@
 import {
     BrowserRouter,
     Routes as RouterRoutes,
-    Route
+    Route,
+    Navigate
 } from "react-router-dom";
-import { Home } from "../screens/home";
+import { Auth } from "../screens/auth";
+import { Dashboard } from "../screens/dashboard";
+import { useAuth } from "../hooks/useAuth";
 
 export function Routes() {
+    const { userLogged } = useAuth();
+
     return (
         <BrowserRouter>
             <RouterRoutes>
-                <Route path="/" element={<Home />} />
+                {
+                    !userLogged?.token &&
+                    <Route path="/*" element={<Auth />} />
+                }
+                <Route path="/*" element={<Dashboard />} />
+
             </RouterRoutes>
+
         </BrowserRouter>
     )
 }

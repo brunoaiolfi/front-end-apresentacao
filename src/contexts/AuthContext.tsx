@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useEffect, useState } from "react";
 import { User } from "../@types/user";
 
 interface UserLogged extends User {
@@ -7,13 +7,39 @@ interface UserLogged extends User {
 
 interface AuthContextProps {
     userLogged?: UserLogged;
+    handleSaveUserLogged: (userLogged?: UserLogged) => Promise<void>;
+    handleGetUserLoggedFromStorageData: () => Promise<void>;
+
 }
 
-const AuthContext = createContext({} as AuthContextProps);
+export const AuthContext = createContext({} as AuthContextProps);
 
 export function AuthProvider({ children }: any) {
 
-    // TODO continuar...
-}
+    const [userLogged, setUserLogged] = useState<UserLogged | undefined>(undefined);
 
-export const useAuth = () => useContext(AuthContext)
+    useEffect(() => {
+        handleGetUserLoggedFromStorageData();
+    }, [])
+
+    async function handleGetUserLoggedFromStorageData() {
+        const userLogged = localStorage.getItem('@userLogged'),
+            userLoggedParsed = JSON.parse(userLogged == null || userLogged == 'undefined' ? '{}' : userLogged);
+        setUserLogged(userLoggedParsed);
+    }
+
+    async function handleSaveUserLogged(userLogged?: UserLogged) {
+        setUserLogged(userLogged);
+        localStorage.setItem('@userLogged', JSON.stringify(userLogged));
+    }
+
+    return (
+        <AuthContext.Provider value={{
+            userLogged,
+            handleSaveUserLogged,
+            handleGetUserLoggedFromStorageData
+        }}>
+            {children}
+        </AuthContext.Provider>
+    )
+}
