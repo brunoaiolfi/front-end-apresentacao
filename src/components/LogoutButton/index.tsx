@@ -12,7 +12,7 @@ export function LogoutButton() {
 
     return (
         <Button
-            p={4}
+            size={'sm'}
             colorScheme='red'
             aria-label='Search database'
             leftIcon={<ImExit />}
