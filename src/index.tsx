@@ -15,21 +15,11 @@ root.render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
         theme="dark"
       />
       <AuthProvider>
         <Routes />
       </AuthProvider>
-      <ToastContainer />
     </ChakraProvider>
   </React.StrictMode>
 );

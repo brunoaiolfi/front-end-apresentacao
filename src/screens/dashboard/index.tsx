@@ -10,7 +10,6 @@ export function Dashboard() {
 
         >
             <Header />
-            <Text>DashBoard</Text>
         </Flex>
     )
 }

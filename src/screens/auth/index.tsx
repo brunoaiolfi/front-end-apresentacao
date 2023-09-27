@@ -21,24 +21,33 @@ const schema = yup.object().shape({
 
 export function Auth() {
 
+    const [isLoading, setIsLoading] = useState(false);
     const [isModalLogonVisible, setIsModalLogonVisible] = useState(false);
 
     const { control, handleSubmit, formState: { errors } } = useForm<Omit<User, 'id' | 'createdAt' | 'name'>>({
         resolver: yupResolver(schema)
     })
-    const { handleSaveUserLogged, userLogged } = useAuth()
+
+    const { handleSaveUserLogged } = useAuth()
 
     function handleChangeModalVisibility() {
         setIsModalLogonVisible(prevState => !prevState);
     }
 
     async function handleLogin(dto: Omit<User, 'id' | 'createdAt' | 'name'>) {
+        setIsLoading(true);
         try {
             const { data } = await api.post<LoginResponse>('/users/auth', dto);
+
             handleSaveUserLogged(data)
+            
+            api.defaults.headers['Authorization'] = `Bearer ${data.token}`
+            
             toast.success('Usuário logado com sucesso!')
         } catch (error: any) {
-            toast.error(error?.response?.data)
+            toast.error(error?.response?.data ?? 'Falha na conexão')
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -132,6 +141,7 @@ export function Auth() {
                         width={'100%'}
                         colorScheme={'pink'}
                         size={'lg'}
+                        isLoading={isLoading}
                     >
                         Entrar
                     </Button>

@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { User } from "../@types/user";
+import { api } from "../infra/api";
 
 interface UserLogged extends User {
     token: string;
@@ -18,13 +19,11 @@ export function AuthProvider({ children }: any) {
 
     const [userLogged, setUserLogged] = useState<UserLogged | undefined>(undefined);
 
-    useEffect(() => {
-        handleGetUserLoggedFromStorageData();
-    }, [])
-
     async function handleGetUserLoggedFromStorageData() {
         const userLogged = localStorage.getItem('@userLogged'),
             userLoggedParsed = JSON.parse(userLogged == null || userLogged == 'undefined' ? '{}' : userLogged);
+
+        api.defaults.headers['Authorization'] = `Bearer ${userLoggedParsed?.token}`
         setUserLogged(userLoggedParsed);
     }
 
